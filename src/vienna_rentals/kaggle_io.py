@@ -13,12 +13,15 @@ import os
 import shutil
 import subprocess
 import tempfile
+import time
 import zipfile
 from pathlib import Path
 
 from vienna_rentals.config import Settings
 
 logger = logging.getLogger(__name__)
+_VERSION_RETRIES = 3
+_VERSION_RETRY_DELAY_SECONDS = 2
 
 
 def configure_credentials(settings: Settings) -> None:
@@ -172,10 +175,29 @@ def publish_version(dataset_folder: Path, dataset_slug: str, version_notes: str)
     _normalize_metadata_file(metadata_file, dataset_slug)
 
     logger.info("Creating a new version of %s...", dataset_slug)
-    subprocess.run(
-        [kaggle, "datasets", "version", "-p", str(dataset_folder), "-m", version_notes],
-        check=True,
-    )
+    version_command = [
+        kaggle,
+        "datasets",
+        "version",
+        "-p",
+        str(dataset_folder),
+        "-m",
+        version_notes,
+    ]
+    for attempt in range(1, _VERSION_RETRIES + 1):
+        try:
+            subprocess.run(version_command, check=True)
+            break
+        except subprocess.CalledProcessError:
+            if attempt == _VERSION_RETRIES:
+                raise
+            logger.warning(
+                "Kaggle dataset version attempt %d/%d failed; retrying in %ds.",
+                attempt,
+                _VERSION_RETRIES,
+                _VERSION_RETRY_DELAY_SECONDS,
+            )
+            time.sleep(_VERSION_RETRY_DELAY_SECONDS)
     logger.info("Dataset %s updated successfully.", dataset_slug)
 
 

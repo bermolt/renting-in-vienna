@@ -1,4 +1,5 @@
 import json
+import subprocess
 import zipfile
 
 import pytest
@@ -98,3 +99,50 @@ def test_normalize_metadata_leaves_expected_format_alone(tmp_path):
     kaggle_io._normalize_metadata_file(metadata_file, "user/dataset")
 
     assert json.loads(metadata_file.read_text()) == original
+
+
+# ---------- publish retry ---------- #
+
+
+def test_publish_version_retries_after_a_failed_upload(monkeypatch, tmp_path):
+    dataset_folder = tmp_path
+    (dataset_folder / "dataset-metadata.json").write_text(json.dumps({"id": "user/dataset"}))
+
+    calls = []
+    attempts = {"version": 0}
+
+    def fake_run(command, check):
+        calls.append(command)
+        if command[1:3] == ["datasets", "version"]:
+            attempts["version"] += 1
+            if attempts["version"] == 1:
+                raise subprocess.CalledProcessError(returncode=1, cmd=command)
+
+    monkeypatch.setattr(kaggle_io, "_kaggle_executable", lambda: "/usr/local/bin/kaggle")
+    monkeypatch.setattr(kaggle_io.subprocess, "run", fake_run)
+    monkeypatch.setattr(kaggle_io.time, "sleep", lambda *_args, **_kwargs: None)
+
+    kaggle_io.publish_version(dataset_folder, "user/dataset", "notes")
+
+    version_calls = [command for command in calls if command[1:3] == ["datasets", "version"]]
+    assert len(version_calls) == 2
+
+
+def test_publish_version_raises_after_retry_limit(monkeypatch, tmp_path):
+    dataset_folder = tmp_path
+    (dataset_folder / "dataset-metadata.json").write_text(json.dumps({"id": "user/dataset"}))
+
+    attempts = {"version": 0}
+
+    def fake_run(command, check):
+        if command[1:3] == ["datasets", "version"]:
+            attempts["version"] += 1
+            raise subprocess.CalledProcessError(returncode=1, cmd=command)
+
+    monkeypatch.setattr(kaggle_io, "_kaggle_executable", lambda: "/usr/local/bin/kaggle")
+    monkeypatch.setattr(kaggle_io.subprocess, "run", fake_run)
+    monkeypatch.setattr(kaggle_io.time, "sleep", lambda *_args, **_kwargs: None)
+
+    with pytest.raises(subprocess.CalledProcessError):
+        kaggle_io.publish_version(dataset_folder, "user/dataset", "notes")
+    assert attempts["version"] == kaggle_io._VERSION_RETRIES
