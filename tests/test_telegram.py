@@ -27,11 +27,12 @@ def _listings(rows):
 
 
 class _FakeResponse:
-    def __init__(self, ok=True):
-        self._ok = ok
+    def __init__(self, ok=True, status_code=200):
+        self.ok = ok
+        self.status_code = status_code
 
     def raise_for_status(self):
-        if not self._ok:
+        if not self.ok:
             raise requests.HTTPError("boom")
 
 
@@ -83,7 +84,13 @@ def test_missing_credentials_raise_before_sending():
 
 
 def test_failed_sends_are_reported_at_the_end(monkeypatch):
-    responses = iter([_FakeResponse(ok=False), _FakeResponse(ok=True)])
+    responses = iter([
+        _FakeResponse(ok=False),
+        _FakeResponse(ok=False),
+        _FakeResponse(ok=False),
+        _FakeResponse(ok=False),
+        _FakeResponse(ok=True),
+    ])
     sent = []
     monkeypatch.setattr(
         telegram.requests,
@@ -95,4 +102,4 @@ def test_failed_sends_are_reported_at_the_end(monkeypatch):
         telegram.send_notifications(_listings([("a", 2), ("b", 1)]), SETTINGS)
 
     # The failure of the first message did not stop the second.
-    assert len(sent) == 2
+    assert len(sent) == 5

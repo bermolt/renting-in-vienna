@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 REQUEST_TIMEOUT = 30  # seconds
 TELEGRAM_DELAY = 1.0  # seconds between messages
+TELEGRAM_MAX_RETRIES = 3
 
 
 def format_message(row: pd.Series) -> str:
@@ -51,12 +52,40 @@ def send_notifications(listings: pd.DataFrame, settings: Settings) -> None:
             "text": format_message(row),
             "parse_mode": "HTML",
         }
-        try:
-            response = requests.post(telegram_url, data=message_data, timeout=REQUEST_TIMEOUT)
-            response.raise_for_status()
-        except requests.RequestException as e:
-            failures += 1
-            logger.error("Failed to send message for listing %s: %s", row["Link"], e)
+        for attempt in range(TELEGRAM_MAX_RETRIES + 1):
+            try:
+                response = requests.post(
+                    telegram_url,
+                    data=message_data,
+                    timeout=REQUEST_TIMEOUT,
+                )
+
+                if response.status_code == 429:
+                    retry_after = response.json().get("parameters", {}).get(
+                        "retry_after", TELEGRAM_DELAY
+                    )
+                    logger.warning(
+                        "Telegram rate limit for %s. Retrying after %s seconds.",
+                        row["Link"],
+                        retry_after,
+                    )
+                    if attempt < TELEGRAM_MAX_RETRIES:
+                        time.sleep(retry_after)
+                        continue
+
+                response.raise_for_status()
+                break
+
+            except requests.RequestException as e:
+                if attempt == TELEGRAM_MAX_RETRIES:
+                    failures += 1
+                    logger.error(
+                        "Failed to send message for listing %s: %s",
+                        row["Link"],
+                        e,
+                    )
+                else:
+                    time.sleep(TELEGRAM_DELAY)
 
     sent = len(listings) - failures
     logger.info("Sent %d of %d Telegram notifications.", sent, len(listings))
