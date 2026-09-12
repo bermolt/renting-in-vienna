@@ -105,6 +105,7 @@ def run(settings: Settings, *, skip_telegram: bool = False, dry_run: bool = Fals
 
     logger.info("Pipeline run complete: %d new listings.", len(new_listings))
 
+
 def notify_existing(settings: Settings) -> None:
     """Send all matching listings from the current Willhaben search to Telegram."""
     settings.ensure(*Settings.TELEGRAM_FIELDS)

@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 REQUEST_TIMEOUT = 30  # seconds
 TELEGRAM_DELAY = 1.0  # seconds between messages
 
+
 def format_message(row: pd.Series) -> str:
     """Render one listing as a Telegram HTML message."""
     formatted_date = row["Published Date"].strftime("%b %d, %H:%M")
