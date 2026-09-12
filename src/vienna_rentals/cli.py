@@ -55,6 +55,12 @@ def cmd_test_telegram(args: argparse.Namespace) -> None:
     telegram.send_test_message(Settings.from_env())
     print("Message sent successfully.")
 
+def cmd_notify_existing(args: argparse.Namespace) -> None:
+    from vienna_rentals import pipeline
+
+    pipeline.notify_existing(Settings.from_env())
+    print("Existing listings sent successfully.")
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
@@ -85,6 +91,13 @@ def build_parser() -> argparse.ArgumentParser:
         "test-telegram", help="Send a test message to the Telegram channel."
     )
     test_parser.set_defaults(handler=cmd_test_telegram)
+
+
+    notify_parser = subparsers.add_parser(
+        "notify-existing",
+        help="Send all currently matching listings to Telegram.",
+    )
+    notify_parser.set_defaults(handler=cmd_notify_existing)
 
     return parser
 

@@ -8,6 +8,8 @@ raises at the end so the workflow run is visibly red.
 
 import logging
 
+import time
+
 import pandas as pd
 import requests
 
@@ -16,7 +18,7 @@ from vienna_rentals.config import Settings
 logger = logging.getLogger(__name__)
 
 REQUEST_TIMEOUT = 30  # seconds
-
+TELEGRAM_DELAY = 1.0  # seconds between messages
 
 def format_message(row: pd.Series) -> str:
     """Render one listing as a Telegram HTML message."""
@@ -43,6 +45,7 @@ def send_notifications(listings: pd.DataFrame, settings: Settings) -> None:
     failures = 0
 
     for _, row in listings.sort_values(by="Published Date").iterrows():
+        time.sleep(TELEGRAM_DELAY)
         message_data = {
             "chat_id": settings.telegram_channel_id,
             "text": format_message(row),

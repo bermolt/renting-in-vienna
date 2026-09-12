@@ -104,3 +104,22 @@ def run(settings: Settings, *, skip_telegram: bool = False, dry_run: bool = Fals
             telegram.send_notifications(matching, settings)
 
     logger.info("Pipeline run complete: %d new listings.", len(new_listings))
+
+def notify_existing(settings: Settings) -> None:
+    """Send all matching listings from the current Willhaben search to Telegram."""
+    settings.ensure(*Settings.TELEGRAM_FIELDS)
+
+    scraped = scraper.scrape_all_listings()
+    if not scraped:
+        raise RuntimeError("Scrape returned no listings.")
+
+    listings_df = history.listings_to_frame(scraped)
+    matching = filtering.filter_listings(listings_df)
+
+    logger.info(
+        "Found %d matching listings out of %d scraped.",
+        len(matching),
+        len(scraped),
+    )
+
+    telegram.send_notifications(matching, settings)

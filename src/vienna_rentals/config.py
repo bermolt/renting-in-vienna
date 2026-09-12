@@ -55,12 +55,13 @@ MIN_PUBLISH_ROWS = 100
 
 # ---------- Filter preferences (what lands in the Telegram channel) ---------- #
 
-MIN_PRICE = 400
-MAX_PRICE = 800
-MIN_ROOMS = 2
+MIN_PRICE = 200
+MAX_PRICE = 650
+MIN_ROOMS = 1
 PROPERTY_TYPE = "Wohnung"
-MAX_LISTING_AGE_DAYS = 1
-ALLOWED_DISTRICTS = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17}
+MAX_LISTING_AGE_DAYS = 2
+ALLOWED_DISTRICTS = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23}
+EXCLUDE_KEYWORDS = {"WG", "temporary", "short-term"}
 
 LISTING_BASE_URL = "https://www.willhaben.at/iad/immobilien/d/mietwohnungen/wien/"
 
@@ -87,7 +88,7 @@ class Settings:
         "kaggle_username": "KAGGLE_USERNAME",
         "kaggle_api_key": "KAGGLE_API_KEY",
         "private_dataset_slug": "PRIVATE_KAGGLE_DATASET_SLUG",
-        "public_dataset_slug": "KAGGLE_DATASET_SLUG",
+        "public_dataset_slug": "PUBLIC_KAGGLE_DATASET_SLUG",
         "telegram_bot_token": "BOT_API_KEY",
         "telegram_channel_id": "CHANNEL_ID",
     }

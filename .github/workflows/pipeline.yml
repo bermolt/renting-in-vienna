@@ -8,7 +8,7 @@ name: Scraping Pipeline
 on:
   schedule:
     # Every 6 minutes (GitHub's cron is best-effort, so expect longer gaps).
-    - cron: "*/6 * * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch: # Allows manual triggering from the Actions tab
 
 permissions:
