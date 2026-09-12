@@ -7,7 +7,6 @@ raises at the end so the workflow run is visibly red.
 """
 
 import logging
-
 import time
 
 import pandas as pd
