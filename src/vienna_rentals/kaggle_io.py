@@ -33,9 +33,9 @@ def configure_credentials(settings: Settings) -> None:
     bearer token taken from the KAGGLE_API_TOKEN environment variable —
     with only kaggle.json it fails with 'Authentication required'.
     """
-    settings.ensure("kaggle_username", "kaggle_api_key")
+    settings.ensure("kaggle_username", "kaggle_api_key", "kaggle_api_token")
 
-    os.environ["KAGGLE_API_TOKEN"] = settings.kaggle_api_key  # inherited by CLI subprocesses
+    os.environ["KAGGLE_API_TOKEN"] = settings.kaggle_api_token  # inherited by CLI subprocesses
 
     kaggle_config_dir = Path("~/.kaggle").expanduser()
     kaggle_config_dir.mkdir(parents=True, exist_ok=True)

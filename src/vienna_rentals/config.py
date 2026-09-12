@@ -101,6 +101,7 @@ class Settings:
 
     kaggle_username: str | None = None
     kaggle_api_key: str | None = None
+    kaggle_api_token: str | None = None
     private_dataset_slug: str | None = None
     public_dataset_slug: str | None = None
     telegram_bot_token: str | None = None
@@ -111,6 +112,7 @@ class Settings:
     ENV_VARS: ClassVar[dict[str, str]] = {
         "kaggle_username": "KAGGLE_USERNAME",
         "kaggle_api_key": "KAGGLE_API_KEY",
+        "kaggle_api_token": "KAGGLE_API_TOKEN",
         "private_dataset_slug": "PRIVATE_KAGGLE_DATASET_SLUG",
         "public_dataset_slug": "PUBLIC_KAGGLE_DATASET_SLUG",
         "telegram_bot_token": "BOT_API_KEY",
@@ -120,6 +122,7 @@ class Settings:
     KAGGLE_FIELDS: ClassVar[tuple[str, ...]] = (
         "kaggle_username",
         "kaggle_api_key",
+        "kaggle_api_token",
         "private_dataset_slug",
         "public_dataset_slug",
     )

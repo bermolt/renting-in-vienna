@@ -8,6 +8,7 @@ from vienna_rentals.models import Listing
 SETTINGS = Settings(
     kaggle_username="user",
     kaggle_api_key="key",
+    kaggle_api_token="token",
     private_dataset_slug="user/private",
     public_dataset_slug="user/public",
     telegram_bot_token="token",
@@ -119,6 +120,7 @@ def test_missing_telegram_credentials_fail_before_any_work(harness):
     incomplete = Settings(
         kaggle_username="user",
         kaggle_api_key="key",
+        kaggle_api_token="token",
         private_dataset_slug="user/private",
         public_dataset_slug="user/public",
     )
