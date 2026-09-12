@@ -47,6 +47,7 @@ jobs:
           KAGGLE_API_KEY: ${{ secrets.KAGGLE_API_KEY }}
           PRIVATE_KAGGLE_DATASET_SLUG: ${{ secrets.PRIVATE_KAGGLE_DATASET_SLUG }}
           KAGGLE_DATASET_SLUG: ${{ secrets.KAGGLE_DATASET_SLUG }}
+          PUBLIC_KAGGLE_DATASET_SLUG: ${{ secrets.PUBLIC_KAGGLE_DATASET_SLUG }}
           BOT_API_KEY: ${{ secrets.BOT_API_KEY }}
           CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
         run: uv run vienna-rentals run
