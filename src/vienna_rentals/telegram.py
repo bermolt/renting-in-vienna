@@ -61,8 +61,8 @@ def send_notifications(listings: pd.DataFrame, settings: Settings) -> None:
                 )
 
                 if response.status_code == 429:
-                    retry_after = response.json().get("parameters", {}).get(
-                        "retry_after", TELEGRAM_DELAY
+                    retry_after = (
+                        response.json().get("parameters", {}).get("retry_after", TELEGRAM_DELAY)
                     )
                     logger.warning(
                         "Telegram rate limit for %s. Retrying after %s seconds.",

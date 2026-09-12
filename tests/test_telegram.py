@@ -84,13 +84,15 @@ def test_missing_credentials_raise_before_sending():
 
 
 def test_failed_sends_are_reported_at_the_end(monkeypatch):
-    responses = iter([
-        _FakeResponse(ok=False),
-        _FakeResponse(ok=False),
-        _FakeResponse(ok=False),
-        _FakeResponse(ok=False),
-        _FakeResponse(ok=True),
-    ])
+    responses = iter(
+        [
+            _FakeResponse(ok=False),
+            _FakeResponse(ok=False),
+            _FakeResponse(ok=False),
+            _FakeResponse(ok=False),
+            _FakeResponse(ok=True),
+        ]
+    )
     sent = []
     monkeypatch.setattr(
         telegram.requests,
