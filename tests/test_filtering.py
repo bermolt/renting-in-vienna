@@ -58,6 +58,7 @@ def test_listing_is_filtered_out(overrides):
 
     assert result.empty
 
+
 def test_only_matching_rows_survive_in_a_mixed_batch():
     rows = [
         _row(**{"Ad ID": "1"}),
