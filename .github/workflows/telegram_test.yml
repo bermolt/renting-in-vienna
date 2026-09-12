@@ -24,6 +24,6 @@ jobs:
 
       - name: Run Telegram Bot Test
         env:
-          BOT_API_KEY: ${{ secrets.BOT_API_KEY }}
-          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+          BOT_API_KEY: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHANNEL_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: uv run vienna-rentals test-telegram
