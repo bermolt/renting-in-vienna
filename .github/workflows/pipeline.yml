@@ -44,6 +44,7 @@ jobs:
       - name: Run the pipeline
         env:
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
           KAGGLE_API_KEY: ${{ secrets.KAGGLE_API_KEY }}
           PRIVATE_KAGGLE_DATASET_SLUG: ${{ secrets.PRIVATE_KAGGLE_DATASET_SLUG }}
           KAGGLE_DATASET_SLUG: ${{ secrets.KAGGLE_DATASET_SLUG }}
