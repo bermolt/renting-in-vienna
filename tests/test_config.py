@@ -13,7 +13,7 @@ def test_from_env_reads_all_variables(monkeypatch):
     monkeypatch.setenv("KAGGLE_USERNAME", "user")
     monkeypatch.setenv("KAGGLE_API_KEY", "key")
     monkeypatch.setenv("PRIVATE_KAGGLE_DATASET_SLUG", "user/private")
-    monkeypatch.setenv("KAGGLE_DATASET_SLUG", "user/public")
+    monkeypatch.setenv("PUBLIC_KAGGLE_DATASET_SLUG", "user/public")
     monkeypatch.setenv("BOT_API_KEY", "token")
     monkeypatch.setenv("CHANNEL_ID", "channel")
 

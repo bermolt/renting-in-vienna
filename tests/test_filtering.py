@@ -44,12 +44,12 @@ def test_passing_listing_is_kept_and_gets_a_link():
 @pytest.mark.parametrize(
     "overrides",
     [
-        {"Price": "300"},  # below MIN_PRICE
-        {"Price": "900"},  # above MAX_PRICE
-        {"Rooms": "1"},  # below MIN_ROOMS
+        {"Price": "100"},  # below MIN_PRICE
+        {"Price": "700"},  # above MAX_PRICE
+        {"Rooms": "0"},  # below MIN_ROOMS
         {"State": "Niederösterreich"},  # wrong state
         {"Property Type": "Haus"},  # wrong property type
-        {"Location": "Wien, 13. Bezirk, Hietzing"},  # excluded district
+        {"Location": "Wien, 24. Bezirk, Example"},  # excluded district
         {"Published Date": "2000-01-01T00:00:00Z"},  # too old
     ],
 )
@@ -57,7 +57,6 @@ def test_listing_is_filtered_out(overrides):
     result = filtering.filter_listings(_frame([_row(**overrides)]))
 
     assert result.empty
-
 
 def test_only_matching_rows_survive_in_a_mixed_batch():
     rows = [
