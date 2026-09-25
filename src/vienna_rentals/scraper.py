@@ -17,9 +17,7 @@ from vienna_rentals.models import Listing
 logger = logging.getLogger(__name__)
 
 
-def fetch_search_page(
-    session: requests.Session, page: int
-) -> dict[str, Any] | None:
+def fetch_search_page(session: requests.Session, page: int) -> dict[str, Any] | None:
     """Fetch one Willhaben search page and extract its search result."""
     params = {**config.SEARCH_PARAMS, "page": str(page)}
 
@@ -115,9 +113,7 @@ def parse_page(data: dict[str, Any]) -> list[Listing]:
     return [Listing.from_advert(advert) for advert in adverts]
 
 
-def fetch_page(
-    session: requests.Session, page: int
-) -> dict[str, Any] | None:
+def fetch_page(session: requests.Session, page: int) -> dict[str, Any] | None:
     """Fetch one result page."""
     return fetch_search_page(session, page)
 
@@ -133,17 +129,13 @@ def scrape_all_listings() -> list[Listing]:
             logger.warning("No pages to scrape.")
             return listings
 
-        for batch_start in range(
-            1, total_pages + 1, config.PAGE_BATCH_SIZE
-        ):
+        for batch_start in range(1, total_pages + 1, config.PAGE_BATCH_SIZE):
             batch_end = min(
                 batch_start + config.PAGE_BATCH_SIZE - 1,
                 total_pages,
             )
 
-            with ThreadPoolExecutor(
-                max_workers=config.MAX_WORKERS
-            ) as executor:
+            with ThreadPoolExecutor(max_workers=config.MAX_WORKERS) as executor:
                 futures = [
                     executor.submit(fetch_page, session, page)
                     for page in range(batch_start, batch_end + 1)
