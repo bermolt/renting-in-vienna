@@ -18,6 +18,9 @@ WILLHABEN_SEARCH_URL = (
     "https://www.willhaben.at/webapi/iad/search/atz/seo/immobilien/"
     "mietwohnungen/mietwohnung-angebote"
 )
+WILLHABEN_SEARCH_PAGE_URL = (
+    "https://www.willhaben.at/iad/immobilien/mietwohnungen/mietwohnung-angebote"
+)
 WILLHABEN_HEADERS = {
     "accept": "application/json",
     "x-wh-client": "api@willhaben.at;responsive_web;server;1.0.0;desktop",
