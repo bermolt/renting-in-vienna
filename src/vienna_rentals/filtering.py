@@ -15,10 +15,7 @@ def _is_excluded_listing(df: pd.DataFrame) -> pd.Series:
     text_columns = [
         column
         for column in df.columns
-        if (
-            pd.api.types.is_object_dtype(df[column])
-            or pd.api.types.is_string_dtype(df[column])
-        )
+        if (pd.api.types.is_object_dtype(df[column]) or pd.api.types.is_string_dtype(df[column]))
     ]
 
     if not text_columns:
@@ -27,8 +24,7 @@ def _is_excluded_listing(df: pd.DataFrame) -> pd.Series:
     listing_text = df[text_columns].fillna("").astype(str).agg(" ".join, axis=1)
 
     keyword_patterns = [
-        rf"(?<!\w){re.escape(keyword)}(?!\w)"
-        for keyword in config.EXCLUDE_KEYWORDS
+        rf"(?<!\w){re.escape(keyword)}(?!\w)" for keyword in config.EXCLUDE_KEYWORDS
     ]
 
     patterns = keyword_patterns + list(config.SOCIAL_HOUSING_PATTERNS)
