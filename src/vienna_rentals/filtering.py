@@ -1,7 +1,6 @@
 """Filter listings down to the apartments worth a Telegram notification."""
 
 import logging
-
 import re
 
 import pandas as pd
