@@ -2,11 +2,45 @@
 
 import logging
 
+import re
+
 import pandas as pd
 
 from vienna_rentals import config
 
 logger = logging.getLogger(__name__)
+
+
+def _is_excluded_listing(df: pd.DataFrame) -> pd.Series:
+    """Identify listings matching excluded keywords or social-housing patterns."""
+    text_columns = [
+        column
+        for column in df.columns
+        if (
+            pd.api.types.is_object_dtype(df[column])
+            or pd.api.types.is_string_dtype(df[column])
+        )
+    ]
+
+    if not text_columns:
+        return pd.Series(False, index=df.index)
+
+    listing_text = df[text_columns].fillna("").astype(str).agg(" ".join, axis=1)
+
+    keyword_patterns = [
+        rf"(?<!\w){re.escape(keyword)}(?!\w)"
+        for keyword in config.EXCLUDE_KEYWORDS
+    ]
+
+    patterns = keyword_patterns + list(config.SOCIAL_HOUSING_PATTERNS)
+    combined_pattern = "|".join(f"(?:{pattern})" for pattern in patterns)
+
+    return listing_text.str.contains(
+        combined_pattern,
+        case=False,
+        regex=True,
+        na=False,
+    )
 
 
 def _build_link(row: pd.Series) -> str:
@@ -42,6 +76,8 @@ def filter_listings(df: pd.DataFrame) -> pd.DataFrame:
 
     cutoff = pd.Timestamp.now(tz="UTC") - pd.Timedelta(days=config.MAX_LISTING_AGE_DAYS)
 
+    excluded = _is_excluded_listing(df)
+
     filtered = df[
         (df["State"] == "Wien")
         & (df["Price"] > config.MIN_PRICE)
@@ -50,6 +86,7 @@ def filter_listings(df: pd.DataFrame) -> pd.DataFrame:
         & (df["Property Type"] == config.PROPERTY_TYPE)
         & (df["Published Date"] >= cutoff)
         & (df["Numeric District"].isin(config.ALLOWED_DISTRICTS))
+        & ~excluded
     ].copy()
 
     filtered["Link"] = filtered.apply(_build_link, axis=1)

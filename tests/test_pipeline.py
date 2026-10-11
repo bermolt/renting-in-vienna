@@ -23,14 +23,14 @@ def _notifiable_listing(ad_id):
         description="Nice flat",
         location="Wien, 05. Bezirk, Margareten",
         postcode="1050",
-        price="600",
+        price="400",
         rooms="2",
         size="48",
         state="Wien",
         district="Margareten",
         property_type="Wohnung",
         published_date=pd.Timestamp.now(tz="UTC").isoformat(),
-        rent="600",
+        rent="400",
     )
 
 

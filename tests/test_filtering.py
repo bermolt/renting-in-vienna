@@ -16,14 +16,14 @@ def _row(**overrides):
         description="Nice flat",
         location="Wien, 05. Bezirk, Margareten",
         postcode="1050",
-        price="600",
+        price="400",
         rooms="2",
         size="48",
         state="Wien",
         district="Margareten",
         property_type="Wohnung",
         published_date=_recent_iso(),
-        rent="600",
+        rent="400",
     ).to_record()
     base.update(overrides)
     return base

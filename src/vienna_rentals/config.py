@@ -58,8 +58,8 @@ MIN_PUBLISH_ROWS = 100
 
 # ---------- Filter preferences (what lands in the Telegram channel) ---------- #
 
-MIN_PRICE = 200
-MAX_PRICE = 650
+MIN_PRICE = 350
+MAX_PRICE = 550
 MIN_ROOMS = 1
 PROPERTY_TYPE = "Wohnung"
 MAX_LISTING_AGE_DAYS = 2
@@ -89,6 +89,20 @@ ALLOWED_DISTRICTS = {
     23,
 }
 EXCLUDE_KEYWORDS = {"WG", "temporary", "short-term"}
+
+SOCIAL_HOUSING_PATTERNS = (
+    r"\bgemeindewohnung(?:en)?\b",
+    r"\bwiener\s+wohnen\b",
+    r"\bwohn[-\s]?ticket\b",
+    r"\bgef\u00f6rder\w*\s+wohnung\w*\b",
+    r"\bgefoerder\w*\s+wohnung\w*\b",
+    r"\bgef\u00f6rder\w*\s+wohnbau\b",
+    r"\bgefoerder\w*\s+wohnbau\b",
+    r"\bsmart[-\s]?wohnung\w*\b",
+    r"\bwohnberatung\s+wien\b",
+    r"\bwohnbauf\u00f6rderung\b",
+    r"\bwohnbaufoerderung\b",
+)
 
 LISTING_BASE_URL = "https://www.willhaben.at/iad/immobilien/d/mietwohnungen/wien/"
 
